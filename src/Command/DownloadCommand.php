@@ -72,11 +72,10 @@ final class DownloadCommand extends Command
                 /** @var \Composer\Package\PackageInterface $package */
                 $package = $packages[$packageName];
 
-                $targetName = str_replace('/', '_', $packageName);
                 $targetPath = implode(DIRECTORY_SEPARATOR, [
                     $config->getDirectory(),
                     'download',
-                    $targetName
+                    $packageName
                 ]);
 
                 if (!is_dir($targetPath)) {
