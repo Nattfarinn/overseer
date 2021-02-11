@@ -40,7 +40,7 @@ final class OverseerPlugin implements PluginInterface, EventSubscriberInterface
         $composer = $event->getComposer();
         $io = $event->getIO();
 
-        $configResolver = new ConfigResolver($composer->getPackage()->getTargetDir());
+        $configResolver = new ConfigResolver(getcwd());
         $config = $configResolver->getConfig();
 
         foreach ($config->getRepositories() as $repository) {
