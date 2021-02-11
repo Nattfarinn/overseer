@@ -8,6 +8,9 @@ use Composer\Composer;
 use Composer\Downloader\GitDownloader;
 use Composer\Factory;
 use Composer\IO\NullIO;
+use Composer\Package\PackageInterface;
+use Composer\Repository\InstalledArrayRepository;
+use Composer\Repository\InstalledRepository;
 use Overseer\Config\Config;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -49,11 +52,20 @@ final class DownloadCommand extends Command
             true
         );
 
-        $packages = array_merge(
-            $composer->getPackage()->getRequires(),
-            $composer->getPackage()->getDevRequires()
-        );
-        $packageNames = array_keys($packages);
+        $rootPackage = $composer->getPackage();
+        $repository = new InstalledRepository([
+            $composer->getRepositoryManager()->getLocalRepository()
+        ]);
+
+        if (!$repository->getPackages() && ($rootPackage->getRequires() || $rootPackage->getDevRequires())) {
+            $io->writeError('<warning>No dependencies installed. Try running composer install or update.</warning>');
+
+            return;
+        }
+
+        $packageNames = array_map(static function (PackageInterface $package): string {
+            return $package->getName();
+        }, $repository->getPackages());
 
         $gitDownloader = new GitDownloader(new NullIO(), $composer->getConfig());
 
@@ -63,10 +75,7 @@ final class DownloadCommand extends Command
             foreach ($matches as $packageName) {
                 /** @var \Composer\Package\Link $packageLink */
                 $packageLink = $packages[$packageName];
-                $package = $composer->getRepositoryManager()->findPackage(
-                    $packageLink->getTarget(),
-                    $packageLink->getPrettyConstraint()
-                );
+                $package = $repository->findPackage($packageName);
 
                 $targetName = str_replace('/', '_', $packageLink->getTarget());
                 $targetPath = implode(DIRECTORY_SEPARATOR, [

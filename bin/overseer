@@ -28,7 +28,7 @@ do {
 
 $application = new Application(
     basename(__FILE__, '.php'),
-    trim(file_get_contents('VERSION'))
+    trim('1.0-dev')
 );
 
 $application->add(new AddCommand('add'));
