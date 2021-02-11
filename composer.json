@@ -1,0 +1,36 @@
+{
+    "name": "nattfarinn/overseer",
+    "type": "composer-plugin",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Nattfarinn",
+            "email": "nattfarinn@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Overseer\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.4",
+        "ext-json": "*",
+        "composer-plugin-api": "^2.0",
+        "symfony/console": "^5.2"
+    },
+    "require-dev": {
+        "composer/composer": "^2.0",
+        "symfony/var-dumper": "^5.2"
+    },
+    "extra": {
+        "class": "Overseer\\Composer\\OverseerPlugin",
+        "plugin-modifies-downloads": true,
+        "branch-alias": {
+            "dev-main": "1.0.x-dev"
+        }
+    },
+    "bin": [
+        "bin/overseer"
+    ]
+}
