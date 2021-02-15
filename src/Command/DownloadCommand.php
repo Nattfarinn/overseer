@@ -25,6 +25,7 @@ final class DownloadCommand extends Command
     {
         $this
             ->setName('download')
+            ->addArgument('target', InputArgument::REQUIRED)
             ->addArgument('repositories', InputArgument::IS_ARRAY | InputArgument::REQUIRED);
     }
 
@@ -34,6 +35,7 @@ final class DownloadCommand extends Command
         OutputInterface $output
     ): void {
         $repositories = $input->getArgument('repositories');
+        $target = $input->getArgument('target');
         $style = new SymfonyStyle($input, $output);
         $io = new ConsoleIO($input, $output, new HelperSet());
 
@@ -73,8 +75,7 @@ final class DownloadCommand extends Command
                 $package = $packages[$packageName];
 
                 $targetPath = implode(DIRECTORY_SEPARATOR, [
-                    $config->getDirectory(),
-                    'download',
+                    $target,
                     $packageName
                 ]);
 
