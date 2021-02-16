@@ -6,6 +6,7 @@ declare(strict_types=1);
 use Overseer\Command\AddCommand;
 use Overseer\Command\DownloadCommand;
 use Overseer\Command\RemoveCommand;
+use Overseer\Command\StatusCommand;
 use Symfony\Component\Console\Application;
 
 $nextLocation = __DIR__;
@@ -34,4 +35,5 @@ $application = new Application(
 $application->add(new AddCommand('add'));
 $application->add(new RemoveCommand('remove'));
 $application->add(new DownloadCommand('download'));
+$application->add(new StatusCommand('status'));
 $application->run();
