@@ -13,9 +13,7 @@ final class RemoveCommand extends Command
 {
     protected function configure()
     {
-        $this
-            ->setName('remove')
-            ->addArgument('repositories', InputArgument::IS_ARRAY | InputArgument::REQUIRED);
+        $this->addArgument('repositories', InputArgument::IS_ARRAY | InputArgument::REQUIRED);
     }
 
     public function action(

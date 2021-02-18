@@ -13,9 +13,7 @@ final class AddCommand extends Command
 {
     protected function configure()
     {
-        $this
-            ->setName('add')
-            ->addArgument('repositories', InputArgument::IS_ARRAY | InputArgument::REQUIRED);
+        $this->addArgument('repositories', InputArgument::IS_ARRAY | InputArgument::REQUIRED);
     }
 
     public function action(

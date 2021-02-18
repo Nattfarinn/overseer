@@ -6,6 +6,7 @@ namespace Overseer\Command;
 
 use Overseer\Config\Config;
 use Overseer\Git\Repository;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -17,7 +18,7 @@ final class StatusCommand extends Command
     {
         $this
             ->addOption('dirty', 'd', InputOption::VALUE_NONE)
-            ->addOption('no-fetch', 'x', InputOption::VALUE_NONE);
+            ->addOption('fetch', 'f', InputOption::VALUE_NONE);
     }
 
     public function action(Config $config, InputInterface $input, OutputInterface $output): void
@@ -28,17 +29,21 @@ final class StatusCommand extends Command
         $table->setStyle('box');
         $table->setHeaders(['Repository', 'Branch', 'State']);
 
-        $onlyDirty = $input->getOption('dirty');
-        $noFetch = $input->getOption('no-fetch');
+        $dirty = $input->getOption('dirty');
+        $fetch = $input->getOption('fetch');
+
+        if ($fetch) {
+            $progress = new ProgressBar($output, count($repositories));
+        }
 
         foreach ($repositories as $repository) {
             $git = new Repository($repository);
 
-            if (!$noFetch) {
-                $git->fetch('origin', true);
-            }
+            if (!$dirty || $git->hasChanges()) {
+                if ($fetch) {
+                    $git->fetch('origin', true);
+                }
 
-            if (!$onlyDirty || $git->hasChanges()) {
                 $states = [];
                 if ($git->isAhead()) {
                     $states[] = $this->color('yellow', 'Ahead');
@@ -58,6 +63,15 @@ final class StatusCommand extends Command
                     implode(', ', $states)
                 ]);
             }
+
+            if ($fetch) {
+                $progress->advance();
+            }
+        }
+
+        if ($fetch) {
+            $progress->finish();
+            $output->writeln('');
         }
 
         $table->render();

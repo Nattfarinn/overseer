@@ -24,7 +24,6 @@ final class DownloadCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('download')
             ->addArgument('target', InputArgument::REQUIRED)
             ->addArgument('repositories', InputArgument::IS_ARRAY | InputArgument::REQUIRED);
     }

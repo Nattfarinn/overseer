@@ -4,7 +4,10 @@
 declare(strict_types=1);
 
 use Overseer\Command\AddCommand;
+use Overseer\Command\CheckoutCommand;
 use Overseer\Command\DownloadCommand;
+use Overseer\Command\LicenceCommand;
+use Overseer\Command\RebaseCommand;
 use Overseer\Command\RemoveCommand;
 use Overseer\Command\StatusCommand;
 use Symfony\Component\Console\Application;
@@ -36,4 +39,7 @@ $application->add(new AddCommand('add'));
 $application->add(new RemoveCommand('remove'));
 $application->add(new DownloadCommand('download'));
 $application->add(new StatusCommand('status'));
+$application->add(new RebaseCommand('rebase'));
+$application->add(new CheckoutCommand('checkout'));
+$application->add(new LicenceCommand('licence'));
 $application->run();
